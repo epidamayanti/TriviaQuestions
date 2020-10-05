@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_color">
+
+    <include layout="@layout/toolbar_layout" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:layout_below="@+id/toolbar"
+        android:background="@drawable/drop_shadow" />
+
+    <ScrollView
+        android:padding="@dimen/margin_10dp"
+        android:background="@drawable/gradient_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/divider"
+        android:layout_above="@+id/banner_AdView"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/card_shadow"
+                android:layout_marginStart="@dimen/margin_10dp"
+                android:layout_marginEnd="@dimen/margin_10dp"
+                android:weightSum="5">
+
+                <RelativeLayout
+                    android:padding="5dp"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2.8"
+                    android:gravity="center">
+
+                    <RelativeLayout
+                        android:id="@+id/imgLayout"
+                        android:layout_width="85dp"
+                        android:layout_height="85dp"
+                        android:layout_centerHorizontal="true"
+                        android:background="@drawable/circle_bg"
+                        android:padding="2dp">
+
+                        <ImageView
+                            android:src="@drawable/ic_profile"
+                            android:id="@+id/imgProfile"
+                            android:layout_width="85dp"
+                            android:layout_height="85dp"
+                            android:layout_margin="2dp" />
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/tvName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/imgLayout"
+                        android:layout_centerHorizontal="true"
+                        android:layout_margin="5dp"
+                        android:textSize="@dimen/mid_text"
+                        android:textColor="@color/dark_gray"
+                        android:text="@string/name"
+                        android:textStyle="bold"/>
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="@dimen/margin_10dp"
+                    android:layout_weight="2.2"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/rank"
+                        android:textColor="@color/txt_color"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvRank"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/zero"
+                        android:textColor="@color/dark_gray" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginBottom="3dp"
+                        android:background="@color/light_gray" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/score"
+                        android:textColor="@color/txt_color"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvScore"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/zero"
+                        android:textColor="@color/dark_gray" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvPlayNext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_10dp"
+                android:background="@drawable/answer_bg"
+                android:gravity="center"
+                android:paddingTop="@dimen/margin_dp"
+                android:paddingBottom="@dimen/margin_dp"
+                android:text="@string/lets_play"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@color/txt_color"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvLeaderBoard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/answer_bg"
+                android:gravity="center"
+                android:paddingTop="@dimen/margin_dp"
+                android:paddingBottom="@dimen/margin_dp"
+                android:text="Leaderboard"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@color/txt_color"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvLogout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/answer_bg"
+                android:gravity="center"
+                android:paddingTop="@dimen/margin_dp"
+                android:paddingBottom="@dimen/margin_dp"
+                android:text="@string/logout"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@color/txt_color"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>
