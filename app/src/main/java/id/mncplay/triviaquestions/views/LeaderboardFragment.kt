@@ -5,42 +5,58 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.util.Log
+import android.view.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import id.mncplay.triviaquestions.R
 import id.mncplay.triviaquestions.adapters.LeaderboardAdapter
 import id.mncplay.triviaquestions.commons.*
+import id.mncplay.triviaquestions.database.DbHelper
 import id.mncplay.triviaquestions.models.DataUser
 import id.mncplay.triviaquestions.services.Service
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.dialog_warning.view.*
 import kotlinx.android.synthetic.main.fragment_leaderboard.*
-import kotlinx.android.synthetic.main.fragment_leaderboard.tvName
-import kotlinx.android.synthetic.main.fragment_leaderboard.tvScore
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
-class LeaderboardFragment : RxBaseFragment() {
+class LeaderboardFragment : RxBaseFragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private var sharedPrefManager: SharedPrefManager? = null
     private var toolbar: Toolbar? = null
     private var loading: Dialog? = null
     private var items: MutableList<DataUser> = mutableListOf()
     private var rank = 0
+    lateinit var DbHelper : DbHelper
+    private var mSwipeRefreshLayout: SwipeRefreshLayout? = null
 
+
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         lead_list.layoutManager = LinearLayoutManager(this.context)
-        initData()
+        mSwipeRefreshLayout?.setOnRefreshListener(this)
+
+        if(DbHelper.readAllUsers().isEmpty())
+            initData()
+        else{
+            items.clear()
+            items = DbHelper.readAllUsers()
+            lead_list.adapter = LeaderboardAdapter(this.context!!, items) {}
+        }
+
+
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -49,7 +65,11 @@ class LeaderboardFragment : RxBaseFragment() {
 
         sharedPrefManager = SharedPrefManager(this.requireContext())
         toolbar = view.findViewById(R.id.toolbar) as Toolbar
-        loading = LoadingAlert.progressDialog(this.context!!, this.activity!!)
+        DbHelper = DbHelper(this.requireContext())
+        loading = LoadingAlert.progressDialog(this.requireContext(), this.requireActivity())
+        mSwipeRefreshLayout = view.findViewById(R.id.refresh);
+
+
 
         initToolbar()
 
@@ -76,18 +96,29 @@ class LeaderboardFragment : RxBaseFragment() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ resp ->
                 loading?.dismiss()
-                if(resp.status){
+                if (resp.status) {
+                    DbHelper.deleteAllUser()
+
                     items = resp.data
-                    lead_list.adapter = LeaderboardAdapter(this.context!!, items){}
-                    for(i in items.indices){
-                        if(items[i].username == Utils.username){
-                            rank = i+1
-                            tvRankPlayer.text = ""+rank
-                            break
+                    lead_list.adapter = LeaderboardAdapter(this.context!!, items) {}
+                    for (i in items.indices) {
+                        if (items[i].username == Utils.username) {
+                            rank = i + 1
+                            tvRankPlayer.text = "" + rank
+                            Utils.score = items[i].score.toInt()
                         }
+                        DbHelper.insertUser(
+                            DataUser(
+                                items[i].id,
+                                items[i].username,
+                                items[i].name,
+                                items[i].score
+                            )
+                        )
                     }
-                }
-                else {
+                    Log.d("DB", "" + DbHelper.readAllUsers())
+
+                } else {
                     val builder = AlertDialog.Builder(this.context!!)
                     builder.setMessage("DATA TIDAK TERSEDIA")
                         .setPositiveButton(
@@ -100,26 +131,43 @@ class LeaderboardFragment : RxBaseFragment() {
                             }
                         }.setCancelable(false).show()
                 }
-            }) { error ->
+                if(sharedPrefManager?.spLogin!!){
+                    tvName.text = Utils.name_player
+                    tvScore.text = ""+Utils.score
+                }
+            }) { err ->
                 loading?.dismiss()
-                val builder = AlertDialog.Builder(this.context!!)
-                builder.setMessage("ERROR TO GET DATA BECAUSE : \n " + error.localizedMessage)
-                    .setPositiveButton(
-                        "OK"
-                    ) { dialog, which ->
-                        when (which) {
-                            DialogInterface.BUTTON_POSITIVE -> {
-                                dialog.dismiss()
-                            }
-                        }
-                    }.setCancelable(false).show()
+                if (err.localizedMessage.contains("resolve host")) {
+                    val mDialogView = LayoutInflater.from(context).inflate(R.layout.dialog_no_internet, null)
+                    val mBuilder = AlertDialog.Builder(context)
+                        .setView(mDialogView)
+
+                    val  mAlertDialog = mBuilder.setCancelable(false).show()
+
+                    mDialogView.bt_close.setOnClickListener {
+                        mAlertDialog.dismiss()
+                    }
+
+                } else {
+
+                    val mDialogView = LayoutInflater.from(context).inflate(R.layout.dialog_warning, null)
+                    val mBuilder = AlertDialog.Builder(context)
+                        .setView(mDialogView)
+
+                    val  mAlertDialog = mBuilder.setCancelable(false).show()
+
+                    mDialogView.bt_close.setOnClickListener {
+                        mAlertDialog.dismiss()
+                    }
+
+                    mDialogView.title.setText("SCORE DATA DOESN'T UPDATE! ")
+
+                    mDialogView.content.setText(err.localizedMessage)
+
+                }
 
             }
         )
-        if(sharedPrefManager?.spLogin!!){
-            tvName.text = Utils.username
-            tvScore.text = ""+Utils.score
-        }
 
     }
 
@@ -140,5 +188,11 @@ class LeaderboardFragment : RxBaseFragment() {
             .build()
         return retrofit.create(Service::class.java)
     }
+
+    override fun onRefresh() {
+        mSwipeRefreshLayout?.setRefreshing(false)
+        initData()
+    }
+
 
 }

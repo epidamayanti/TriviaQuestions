@@ -1,5 +1,6 @@
 package id.mncplay.triviaquestions.views
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.DialogInterface
@@ -15,6 +16,7 @@ import id.mncplay.triviaquestions.models.DataUser
 import id.mncplay.triviaquestions.services.Service
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.dialog_warning.view.*
 import kotlinx.android.synthetic.main.fragment_profile.*
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -60,6 +62,7 @@ class ProfileFragment : RxBaseFragment() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun initData(){
         loading?.show()
 
@@ -92,19 +95,36 @@ class ProfileFragment : RxBaseFragment() {
                             }
                         }.setCancelable(false).show()
                 }
-            }) { error ->
+            }) { err ->
                 loading?.dismiss()
-                val builder = AlertDialog.Builder(this.context!!)
-                builder.setMessage("ERROR TO GET DATA BECAUSE : \n " + error.localizedMessage)
-                    .setPositiveButton(
-                        "OK"
-                    ) { dialog, which ->
-                        when (which) {
-                            DialogInterface.BUTTON_POSITIVE -> {
-                                dialog.dismiss()
-                            }
-                        }
-                    }.setCancelable(false).show()
+                if (err.localizedMessage.contains("resolve host")) {
+                    val mDialogView = LayoutInflater.from(context).inflate(R.layout.dialog_no_internet, null)
+                    val mBuilder = AlertDialog.Builder(context)
+                        .setView(mDialogView)
+
+                    val  mAlertDialog = mBuilder.setCancelable(false).show()
+
+                    mDialogView.bt_close.setOnClickListener {
+                        mAlertDialog.dismiss()
+                    }
+
+                } else {
+
+                    val mDialogView = LayoutInflater.from(context).inflate(R.layout.dialog_warning, null)
+                    val mBuilder = AlertDialog.Builder(context)
+                        .setView(mDialogView)
+
+                    val  mAlertDialog = mBuilder.setCancelable(false).show()
+
+                    mDialogView.bt_close.setOnClickListener {
+                        mAlertDialog.dismiss()
+                    }
+
+                    mDialogView.title.setText("GET PROFILE FAILED! ")
+
+                    mDialogView.content.setText(err.localizedMessage)
+
+                }
 
             }
         )
@@ -128,6 +148,9 @@ class ProfileFragment : RxBaseFragment() {
             Utils.isLogin = false
             RxBus.get().send(Utils.LOGIN)
         }
+        /*tvPreview.setOnClickListener{
+            RxBus.get().send(Utils.HISTORY)
+        }*/
     }
 
     private fun provideService(): Service {

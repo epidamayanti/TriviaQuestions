@@ -145,6 +145,20 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:visibility="gone"
+                android:id="@+id/tvPreview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/answer_bg"
+                android:gravity="center"
+                android:paddingTop="@dimen/margin_dp"
+                android:paddingBottom="@dimen/margin_dp"
+                android:text="History Game"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@color/txt_color"
+                android:textStyle="bold" />
+
+            <TextView
                 android:id="@+id/tvLogout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

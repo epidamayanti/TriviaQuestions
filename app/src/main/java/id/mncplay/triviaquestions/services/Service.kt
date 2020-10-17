@@ -6,7 +6,6 @@ import io.reactivex.Observable
 import retrofit2.http.*
 
 interface Service {
-
     @POST(Utils.DATA_ENDPOINT)
     fun getData(@Query("amount")amount:Int,
                 @Query("category")category:Int,

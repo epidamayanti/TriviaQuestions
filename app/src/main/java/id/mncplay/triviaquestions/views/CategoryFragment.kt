@@ -5,25 +5,23 @@ import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import id.mncplay.triviaquestions.R
-import id.mncplay.triviaquestions.R.array.category_id
-import id.mncplay.triviaquestions.R.array.category_name
 import id.mncplay.triviaquestions.adapters.CategoryAdapter
 import id.mncplay.triviaquestions.commons.LoadingAlert
 import id.mncplay.triviaquestions.commons.RxBaseFragment
 import id.mncplay.triviaquestions.commons.RxBus
 import id.mncplay.triviaquestions.commons.Utils
+import id.mncplay.triviaquestions.database.DbHelper
 import id.mncplay.triviaquestions.models.DataCategory
 import id.mncplay.triviaquestions.services.Service
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.dialog_warning.view.*
 import kotlinx.android.synthetic.main.fragment_category.*
 import kotlinx.android.synthetic.main.fragment_mode_popup.view.*
 import okhttp3.OkHttpClient
@@ -37,9 +35,12 @@ class CategoryFragment : RxBaseFragment() {
     private var toolbar: Toolbar? = null
     private var loading: Dialog? = null
     private var items: MutableList<DataCategory> = mutableListOf()
+    private lateinit var DbHelper : DbHelper
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        DbHelper = DbHelper(this.requireContext())
 
         initData()
 
@@ -94,17 +95,8 @@ class CategoryFragment : RxBaseFragment() {
     }
 
     private fun initData(){
-        val id = resources.getIntArray(category_id)
-        val name = resources.getStringArray(category_name)
         items.clear()
-        for (i in name.indices) {
-            items.add(
-                DataCategory(
-                    id[i],
-                    name[i]
-                )
-            )
-        }
+        items = DbHelper.readAllCategory()
     }
 
     private fun initToolbar() {
@@ -142,20 +134,36 @@ class CategoryFragment : RxBaseFragment() {
                             }
                         }.setCancelable(false).show()
                 }
-            }) { error ->
+            }) { err ->
                 loading?.dismiss()
-                val builder = AlertDialog.Builder(this.context!!)
-                builder.setMessage("ERROR TO GET DATA BECAUSE : \n " + error.localizedMessage)
-                    .setPositiveButton(
-                        "OK"
-                    ) { dialog, which ->
-                        when (which) {
-                            DialogInterface.BUTTON_POSITIVE -> {
-                                dialog.dismiss()
-                            }
-                        }
-                    }.setCancelable(false).show()
+                if (err.localizedMessage.contains("resolve host")) {
+                    val mDialogView = LayoutInflater.from(context).inflate(R.layout.dialog_no_internet, null)
+                    val mBuilder = AlertDialog.Builder(context)
+                        .setView(mDialogView)
 
+                    val  mAlertDialog = mBuilder.setCancelable(false).show()
+
+                    mDialogView.bt_close.setOnClickListener {
+                        mAlertDialog.dismiss()
+                    }
+
+                } else {
+
+                    val mDialogView = LayoutInflater.from(context).inflate(R.layout.dialog_warning, null)
+                    val mBuilder = AlertDialog.Builder(context)
+                        .setView(mDialogView)
+
+                    val  mAlertDialog = mBuilder.setCancelable(false).show()
+
+                    mDialogView.bt_close.setOnClickListener {
+                        mAlertDialog.dismiss()
+                    }
+
+                    mDialogView.title.setText("FAILED TO GET DATA CATEGORY! ")
+
+                    mDialogView.content.setText(err.localizedMessage)
+
+                }
             }
         )
 

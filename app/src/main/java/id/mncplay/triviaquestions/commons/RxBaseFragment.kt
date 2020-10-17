@@ -8,7 +8,7 @@ open class RxBaseFragment : Fragment() {
 
     protected var subscriptions = CompositeDisposable()
 
-    override fun    onResume() {
+    override fun onResume() {
         super.onResume()
         subscriptions = CompositeDisposable()
     }

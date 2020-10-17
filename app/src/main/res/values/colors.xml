@@ -17,6 +17,8 @@
     <color name="light_black">#191919</color>
     <color name="gray1">#f1f1f1</color>
     <color name="toolbar_color">#80e6e6e6</color>
+    <color name="grey">#666666</color>
+
 
     <!--background color of lifeline bg nd main page bottom bg colors-->
     <color name="transparent">#00000000</color>

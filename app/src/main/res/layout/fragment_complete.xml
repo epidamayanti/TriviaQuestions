@@ -244,6 +244,7 @@
                 android:textColor="@color/txt_color"
                 android:textStyle="bold" />
 
+
             <TextView
                 android:id="@+id/tvLeaderBoard"
                 android:layout_width="match_parent"
@@ -256,6 +257,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/txt_color"
                 android:textStyle="bold" />
+
 
             <TextView
                 android:id="@+id/tvHome"

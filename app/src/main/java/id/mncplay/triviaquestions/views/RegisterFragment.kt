@@ -19,6 +19,7 @@ import id.mncplay.triviaquestions.models.RegisModel
 import id.mncplay.triviaquestions.services.Service
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.dialog_warning.view.*
 import kotlinx.android.synthetic.main.fragment_register.*
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -106,9 +107,34 @@ class RegisterFragment : RxBaseFragment() {
             }, {
                     err ->
                 loading?.dismiss()
-                val builder = AlertDialog.Builder(context)
-                builder.setMessage("Failed Register User : "+err.localizedMessage).setNegativeButton("OK", dialogClickListener).show()
+                if (err.localizedMessage.contains("resolve host")) {
+                    val mDialogView = LayoutInflater.from(context).inflate(R.layout.dialog_no_internet, null)
+                    val mBuilder = AlertDialog.Builder(context)
+                        .setView(mDialogView)
 
+                    val  mAlertDialog = mBuilder.setCancelable(false).show()
+
+                    mDialogView.bt_close.setOnClickListener {
+                        mAlertDialog.dismiss()
+                    }
+
+                } else {
+
+                    val mDialogView = LayoutInflater.from(context).inflate(R.layout.dialog_warning, null)
+                    val mBuilder = AlertDialog.Builder(context)
+                        .setView(mDialogView)
+
+                    val  mAlertDialog = mBuilder.setCancelable(false).show()
+
+                    mDialogView.bt_close.setOnClickListener {
+                        mAlertDialog.dismiss()
+                    }
+
+                    mDialogView.title.setText("REGISTER FAILED! ")
+
+                    mDialogView.content.setText(err.localizedMessage)
+
+                }
             })
         )
     }

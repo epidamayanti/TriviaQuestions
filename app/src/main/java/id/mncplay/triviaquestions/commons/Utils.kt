@@ -1,6 +1,7 @@
 package id.mncplay.triviaquestions.commons
 
 import android.app.Activity
+import id.mncplay.triviaquestions.models.DataDetailHistory
 import id.mncplay.triviaquestions.models.DataQuestions
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -32,6 +33,8 @@ class Utils {
         val LEADERBOARD = "leaderboard"
         val ABOUT = "about"
         val PROFILE = "profile"
+        val HISTORY = "history"
+        val PREVIEW = "preview"
 
         //data category
         var id_category = 0
@@ -50,6 +53,11 @@ class Utils {
         var name_player = ""
         var score = 0
         var isLogin = false
+
+
+        //preview
+        var dataPrevQuestions: MutableList<DataDetailHistory> = mutableListOf()
+        var id_history = ""
 
 
         //retrofit
