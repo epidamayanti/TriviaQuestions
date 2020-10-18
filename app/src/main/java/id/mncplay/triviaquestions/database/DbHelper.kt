@@ -13,6 +13,7 @@ import id.mncplay.triviaquestions.models.DataCategory
 import id.mncplay.triviaquestions.models.DataDetailHistory
 import id.mncplay.triviaquestions.models.DataHistory
 import id.mncplay.triviaquestions.models.DataUser
+import kotlin.jvm.Throws
 
 class DbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
@@ -122,7 +123,7 @@ class DbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
         val db = writableDatabase
         val cursor: Cursor?
         try {
-            cursor = db.rawQuery("select * from " + DBContract.UserEntry.TABLE_USER+" order by "+DBContract.UserEntry.COLUMN_USER_SCORE +" desc", null)
+            cursor = db.rawQuery("SELECT * FROM " + DBContract.UserEntry.TABLE_USER+" ORDER BY "+DBContract.UserEntry.COLUMN_USER_SCORE +" DESC ", null)
         } catch (e: SQLiteException) {
             db.execSQL(SQL_CREATE_ENTRIES_USER)
             return ArrayList()
@@ -131,13 +132,13 @@ class DbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
         var userId: String
         var username: String
         var name: String
-        var score: String
+        var score: Int
         if (cursor!!.moveToFirst()) {
             while (cursor.isAfterLast == false) {
                 userId = cursor.getString(cursor.getColumnIndex(DBContract.UserEntry.COLUMN_USER_ID))
                 username = cursor.getString(cursor.getColumnIndex(DBContract.UserEntry.COLUMN_USER_USERNAME))
                 name = cursor.getString(cursor.getColumnIndex(DBContract.UserEntry.COLUMN_USER_NAME))
-                score = cursor.getString(cursor.getColumnIndex(DBContract.UserEntry.COLUMN_USER_SCORE))
+                score = cursor.getInt(cursor.getColumnIndex(DBContract.UserEntry.COLUMN_USER_SCORE))
 
                 users.add(DataUser(userId, username, name, score))
                 cursor.moveToNext()
@@ -171,12 +172,12 @@ class DbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
         return category
     }
 
-    fun readAllHistory(): ArrayList<DataHistory> {
+    fun readAllHistoryByName(username: String): ArrayList<DataHistory> {
         val history = ArrayList<DataHistory>()
         val db = writableDatabase
         var cursor: Cursor? = null
         try {
-            cursor = db.rawQuery("select * from " + DBContract.UserEntry.TABLE_HISTORY+" order by "+DBContract.UserEntry.COLUMN_HISTORY_DATE +" asc", null)
+            cursor = db.rawQuery("select * from " + DBContract.UserEntry.TABLE_HISTORY+ " WHERE " + DBContract.UserEntry.COLUMN_HISTORY_USERNAME + "='" + username + "'" +" order by "+DBContract.UserEntry.COLUMN_HISTORY_DATE +" asc", null)
         } catch (e: SQLiteException) {
             db.execSQL(SQL_CREATE_ENTRIES_HISTORY)
             return ArrayList()
@@ -187,7 +188,38 @@ class DbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
         var category: String
         var mode: String
         var date: String
-        var score: Int
+
+        if (cursor!!.moveToFirst()) {
+            while (!cursor.isAfterLast) {
+                id = cursor.getString(cursor.getColumnIndex(DBContract.UserEntry.COLUMN_HISTORY_ID))
+                username = cursor.getString(cursor.getColumnIndex(DBContract.UserEntry.COLUMN_HISTORY_USERNAME))
+                category = cursor.getString(cursor.getColumnIndex(DBContract.UserEntry.COLUMN_HISTORY_CATEGORY))
+                mode = cursor.getString(cursor.getColumnIndex(DBContract.UserEntry.COLUMN_HISTORY_MODE))
+                date = cursor.getString(cursor.getColumnIndex(DBContract.UserEntry.COLUMN_HISTORY_DATE))
+
+                history.add(DataHistory(id, username, category, mode, date))
+                cursor.moveToNext()
+            }
+        }
+        return history
+    }
+
+    fun readAllHistory(): ArrayList<DataHistory> {
+        val history = ArrayList<DataHistory>()
+        val db = writableDatabase
+        var cursor: Cursor? = null
+        try {
+            cursor = db.rawQuery("select * from " + DBContract.UserEntry.TABLE_HISTORY +" order by "+DBContract.UserEntry.COLUMN_HISTORY_DATE +" asc", null)
+        } catch (e: SQLiteException) {
+            db.execSQL(SQL_CREATE_ENTRIES_HISTORY)
+            return ArrayList()
+        }
+
+        var id: String
+        var username: String
+        var category: String
+        var mode: String
+        var date: String
 
         if (cursor!!.moveToFirst()) {
             while (!cursor.isAfterLast) {
@@ -272,7 +304,7 @@ class DbHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null
                     DBContract.UserEntry.COLUMN_USER_ID + " INTEGER PRIMARY KEY, " +
                     DBContract.UserEntry.COLUMN_USER_USERNAME + " TEXT," +
                     DBContract.UserEntry.COLUMN_USER_NAME + " TEXT," +
-                    DBContract.UserEntry.COLUMN_USER_SCORE + " TEXT )"
+                    DBContract.UserEntry.COLUMN_USER_SCORE + " INTEGER )"
 
         private val SQL_CREATE_ENTRIES_HISTORY =
             "CREATE TABLE " + DBContract.UserEntry.TABLE_HISTORY + " (" +

@@ -7,14 +7,14 @@
     android:layout_marginStart="@dimen/margin_10dp"
     android:layout_marginTop="2dp"
     android:layout_marginEnd="@dimen/margin_10dp"
-    android:background="@drawable/card_shadow"
+    android:background="@drawable/adapter_click"
     android:padding="3dp">
 
     <TextView
         android:id="@+id/date"
         android:text="date"
         android:padding="5dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Widget.PopupMenu.Small"
+        android:textSize="10sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 

@@ -40,7 +40,7 @@ class Utils {
         var id_category = 0
         var page = 0
         var true_answer = ""
-        var opt = ""
+        var status = ""
         var name_category = ""
         var dataQuestions: MutableList<DataQuestions> = mutableListOf()
 
@@ -52,8 +52,8 @@ class Utils {
         var username = ""
         var name_player = ""
         var score = 0
+        var rank = 0
         var isLogin = false
-
 
         //preview
         var dataPrevQuestions: MutableList<DataDetailHistory> = mutableListOf()

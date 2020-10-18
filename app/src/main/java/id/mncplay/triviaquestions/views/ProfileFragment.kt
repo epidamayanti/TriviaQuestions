@@ -25,6 +25,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 
+@Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class ProfileFragment : RxBaseFragment() {
 
     private var sharedPrefManager: SharedPrefManager? = null
@@ -128,11 +129,12 @@ class ProfileFragment : RxBaseFragment() {
 
             }
         )
-            tvName.text = Utils.username
+            tvName.text = Utils.username +" - ( "+ Utils.name_player +" )"
             tvScore.text = ""+Utils.score
 
     }
 
+    @SuppressLint("ResourceAsColor")
     override fun onResume() {
         super.onResume()
 
@@ -148,9 +150,9 @@ class ProfileFragment : RxBaseFragment() {
             Utils.isLogin = false
             RxBus.get().send(Utils.LOGIN)
         }
-        /*tvPreview.setOnClickListener{
+        tvPreview.setOnClickListener{
             RxBus.get().send(Utils.HISTORY)
-        }*/
+        }
     }
 
     private fun provideService(): Service {

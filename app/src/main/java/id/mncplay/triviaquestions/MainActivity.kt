@@ -29,6 +29,20 @@ class MainActivity : BaseActivity() {
             }
         }
     }
+    private val dialogPrev = DialogInterface.OnClickListener { dialog, which ->
+        when (which) {
+            DialogInterface.BUTTON_POSITIVE -> {
+                dialog.dismiss()
+                Utils.page = 0
+                changeFragment(HistoryFragment(), false, Utils.HISTORY)
+            }
+
+            DialogInterface.BUTTON_NEGATIVE -> {
+                dialog.dismiss()
+
+            }
+        }
+    }
     lateinit var DbHelper : DbHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,7 +66,6 @@ class MainActivity : BaseActivity() {
                 Utils.score = sharedPrefManager?.spScore!!.toInt()
                 Utils.id_player = sharedPrefManager?.spIdPlayer.toString()
                 Utils.isLogin = true
-
             }
 
             else{
@@ -103,10 +116,14 @@ class MainActivity : BaseActivity() {
 
 
     override fun onBackPressed() {
-        super.onBackPressed()
+
         when (supportFragmentManager.fragments.last()){
             is DashboardFragment ->{
-
+                val builder = AlertDialog.Builder(this)
+                builder.setMessage("Exit ? ")
+                    .setPositiveButton("YES", dialogClickListener)
+                    .setNegativeButton("NO", dialogClickListener)
+                    .setCancelable(false).show()
             }
             is LoginFragment -> {
                 val builder = AlertDialog.Builder(this)
@@ -120,7 +137,13 @@ class MainActivity : BaseActivity() {
             }
             is PlayFragment -> {
                 if(Utils.page == 0)
-                    changeFragment(CategoryFragment(), false, Utils.CATEGORY)
+                    if(Utils.status == "random") {
+                        Utils.status = ""
+                        changeFragment(DashboardFragment(), false, Utils.DASHBOARD)
+                    }
+                    else
+                        changeFragment(CategoryFragment(), false, Utils.CATEGORY)
+
                 else{
                     val builder = AlertDialog.Builder(this)
                     builder.setMessage("Please Complete The Question")
@@ -132,6 +155,23 @@ class MainActivity : BaseActivity() {
                 changeFragment(DashboardFragment(), false, Utils.DASHBOARD)
             }
             is CompleteFragment-> {
+
+            }
+            is HistoryFragment -> {
+                changeFragment(ProfileFragment(), false, Utils.PROFILE)
+            }
+            is AboutFragment -> {
+                changeFragment(DashboardFragment(), false, Utils.DASHBOARD)
+            }
+            is ProfileFragment -> {
+                changeFragment(DashboardFragment(), false, Utils.DASHBOARD)
+            }
+            is PreviewFragment -> {
+                val builder = AlertDialog.Builder(this)
+                builder.setMessage("Exit the preview ? ")
+                    .setPositiveButton("YES", dialogPrev)
+                    .setNegativeButton("NO", dialogPrev)
+                    .setCancelable(false).show()
 
             }
         }

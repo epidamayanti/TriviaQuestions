@@ -36,6 +36,8 @@ class HistoryFragment : RxBaseFragment() {
         history_list.layoutManager = LinearLayoutManager(this.context)
         history_list.adapter = HistoryAdapter(this.context!!, items){
             Utils.id_history = it.id
+            Utils.name_category = it.category
+            Utils.game_mode = it.mode
             Utils.dataPrevQuestions = DbHelper.readDetailHistory(Utils.id_history)
             RxBus.get().send(Utils.PREVIEW)
         }
@@ -57,7 +59,7 @@ class HistoryFragment : RxBaseFragment() {
 
     private fun initData(){
         items.clear()
-        items = DbHelper.readAllHistory()
+        items = DbHelper.readAllHistoryByName(Utils.username)
     }
 
     private fun initDataDetail(idHistory: String): MutableList<DataDetailHistory>{
@@ -67,15 +69,15 @@ class HistoryFragment : RxBaseFragment() {
     private fun initToolbar() {
         toolbar?.setNavigationIcon(R.drawable.ic_back)
         (activity as AppCompatActivity).setSupportActionBar(toolbar)
-        (activity as AppCompatActivity).supportActionBar!!.title = "HISTORY PLAY GAME"
+        (activity as AppCompatActivity).supportActionBar!!.title = "HISTORY GAME"
         (activity as AppCompatActivity).supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         toolbar?.setNavigationOnClickListener {
-            RxBus.get().send(Utils.DASHBOARD)
+            RxBus.get().send(Utils.PROFILE)
         }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        RxBus.get().send(Utils.DASHBOARD)
+        RxBus.get().send(Utils.PROFILE)
         return super.onOptionsItemSelected(item)
     }
 }

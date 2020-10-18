@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <!-- Drop Shadow Stack -->
@@ -11,9 +10,9 @@
                 android:right="1dp"
                 android:top="1dp" />
 
-            <solid android:color="#0016171d" />
+            <solid android:color="#00bbbdcb" />
 
-            <corners android:radius="@dimen/view_corner" />
+            <corners android:radius="3dp" />
         </shape>
     </item>
     <item>
@@ -24,12 +23,9 @@
                 android:right="1dp"
                 android:top="1dp" />
 
-            <gradient
-                android:angle="45"
-                android:endColor="@color/colorPrimary"
-                android:startColor="@color/colorPrimaryDark" />
+            <solid android:color="#05bbbdcb" />
 
-            <corners android:radius="@dimen/view_corner" />
+            <corners android:radius="3dp" />
         </shape>
     </item>
     <item>
@@ -40,9 +36,9 @@
                 android:right="1dp"
                 android:top="1dp" />
 
-            <solid android:color="#0a16171d" />
+            <solid android:color="#0abbbdcb" />
 
-            <corners android:radius="@dimen/view_corner" />
+            <corners android:radius="3dp" />
         </shape>
     </item>
     <item>
@@ -53,9 +49,9 @@
                 android:right="1dp"
                 android:top="1dp" />
 
-            <solid android:color="#0f16171d" />
+            <solid android:color="#0fbbbdcb" />
 
-            <corners android:radius="@dimen/view_corner" />
+            <corners android:radius="3dp" />
         </shape>
     </item>
     <item>
@@ -66,17 +62,16 @@
                 android:right="1dp"
                 android:top="1dp" />
 
-            <solid android:color="#1416171d" />
+            <solid android:color="#14bbbdcb" />
 
-            <corners android:radius="@dimen/view_corner" />
+            <corners android:radius="3dp" />
         </shape>
     </item>
-
     <!-- Background -->
     <item>
         <shape>
-            <solid android:color="@color/white" />
-            <corners android:radius="@dimen/view_corner" />
+            <solid android:color="@color/lightAccent" />
+            <corners android:radius="3dp" />
         </shape>
     </item>
 

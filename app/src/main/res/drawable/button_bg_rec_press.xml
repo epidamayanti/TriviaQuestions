@@ -24,10 +24,7 @@
                 android:right="1dp"
                 android:top="1dp" />
 
-            <gradient
-                android:angle="45"
-                android:endColor="@color/colorPrimary"
-                android:startColor="@color/colorPrimaryDark" />
+            <solid android:color="#0516171d" />
 
             <corners android:radius="@dimen/view_corner" />
         </shape>
@@ -75,7 +72,7 @@
     <!-- Background -->
     <item>
         <shape>
-            <solid android:color="@color/white" />
+            <solid android:color="@color/lightAccent" />
             <corners android:radius="@dimen/view_corner" />
         </shape>
     </item>

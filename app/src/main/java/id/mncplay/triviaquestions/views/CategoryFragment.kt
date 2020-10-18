@@ -169,7 +169,6 @@ class CategoryFragment : RxBaseFragment() {
 
     }
 
-
     private fun provideService(): Service {
         val clientBuilder: OkHttpClient.Builder = Utils.buildClient()
         val retrofit = Retrofit.Builder()

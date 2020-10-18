@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -32,9 +33,114 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp">
 
+                <LinearLayout
+                    android:id="@+id/step0"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:text="@string/game_play_mode"
+                        android:textColor="@color/txt_color"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:weightSum="5">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+                            <RelativeLayout
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:background="@drawable/round_shadow1">
+
+                                <ImageView
+                                    android:src="@drawable/play"
+                                    android:id="@+id/imgQuiz"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_alignParentTop="true"
+                                    android:layout_centerInParent="true"
+                                    android:padding="@dimen/margin_dp"/>
+                            </RelativeLayout>
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:padding="5dp"
+                                android:text="@string/play_random"
+                                android:textColor="@color/txt_color" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:padding="5dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="4"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+
+                                android:id="@+id/lytPlay"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:background="@drawable/button_bg_rec">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:layout_gravity="center"
+                                    android:fontFamily="@font/open_sans_bold"
+                                    android:paddingStart="@dimen/margin_dp"
+                                    android:paddingTop="8dp"
+                                    android:paddingEnd="@dimen/margin_dp"
+                                    android:paddingBottom="8dp"
+                                    android:text="@string/play_quiz"
+                                    android:textSize="10sp"
+                                    android:textColor="@color/colorPrimaryDark"
+                                    tools:ignore="SmallSp" />
+                            </LinearLayout>
+
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:padding="5dp"
+                                android:text="@string/play_selected"
+                                android:textColor="@color/txt_color" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/divider0"
+                    android:layout_width="match_parent"
+                    android:layout_height="4dp"
+                    android:layout_below="@+id/step0"
+                    android:background="@drawable/drop_shadow" />
 
                 <LinearLayout
+                    android:layout_marginTop="@dimen/margin_10dp"
                     android:id="@+id/step1"
+                    android:layout_below="@+id/step0"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -90,7 +196,6 @@
                                 android:padding="5dp"
                                 android:src="@drawable/incorrect" />
 
-
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -111,6 +216,7 @@
                     android:background="@drawable/drop_shadow" />
 
                 <LinearLayout
+                    android:layout_marginTop="@dimen/margin_10dp"
                     android:id="@+id/battleLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -343,7 +449,6 @@
             android:layout_alignParentBottom="true"
             android:background="@color/colorPrimaryDark"
             android:gravity="center"
-            android:onClick="Start"
             android:padding="@dimen/margin_dp"
             android:text="@string/lets_play"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"

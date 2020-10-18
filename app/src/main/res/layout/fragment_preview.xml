@@ -101,11 +101,11 @@
                                         android:orientation="vertical">
 
                                         <ImageView
+                                            android:background="@drawable/btn_click"
                                             android:id="@+id/preview_prev"
                                             android:src="@drawable/ic_prev"
                                             android:layout_width="match_parent"
-                                            android:layout_height="wrap_content"
-                                            />
+                                            android:layout_height="wrap_content" />
 
 
                                     </LinearLayout>
@@ -172,6 +172,7 @@
                                         android:orientation="vertical">
 
                                         <ImageView
+                                            android:background="@drawable/btn_click"
                                             android:id="@+id/preview_next"
                                             android:src="@drawable/ic_next"
                                             android:layout_width="match_parent"

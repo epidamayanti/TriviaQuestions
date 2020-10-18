@@ -5,17 +5,20 @@ import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import id.mncplay.triviaquestions.R
+import java.util.*
+import kotlin.concurrent.schedule
 
 
 open class BaseActivity: RxBaseActivity(){
 
     fun changeFragment(f: Fragment, cleanStack: Boolean, tag: String) {
-        val ft = supportFragmentManager.beginTransaction()
-        if(cleanStack)
-            clearBackStack(supportFragmentManager)
-        ft.replace(R.id.main_content, f, tag)
+        Timer("Waiting..", false).schedule(100) {
+            val ft = supportFragmentManager.beginTransaction()
+            if(cleanStack)
+                clearBackStack(supportFragmentManager)
+            ft.replace(R.id.main_content, f, tag)
                 .addToBackStack(null)
-                .commitAllowingStateLoss()
+                .commitAllowingStateLoss()        }
     }
 
     private fun clearBackStack(fm: FragmentManager) {

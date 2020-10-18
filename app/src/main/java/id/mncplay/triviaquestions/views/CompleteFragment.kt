@@ -1,6 +1,7 @@
 package id.mncplay.triviaquestions.views
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,15 +12,17 @@ import id.mncplay.triviaquestions.R
 import id.mncplay.triviaquestions.commons.RxBaseFragment
 import id.mncplay.triviaquestions.commons.RxBus
 import id.mncplay.triviaquestions.commons.Utils
+import id.mncplay.triviaquestions.database.DbHelper
 import kotlinx.android.synthetic.main.fragment_complete.*
-
 
 class CompleteFragment : RxBaseFragment() {
 
     private var toolbar: Toolbar? = null
+    private lateinit var DbHelper : DbHelper
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        DbHelper = DbHelper(this.requireContext())
         initToolbar()
         initData()
     }
@@ -35,6 +38,7 @@ class CompleteFragment : RxBaseFragment() {
         return view
     }
 
+    @SuppressLint("ResourceAsColor")
     override fun onResume() {
         super.onResume()
         tvPlayNext.setOnClickListener {
@@ -45,6 +49,10 @@ class CompleteFragment : RxBaseFragment() {
         }
         tvHome.setOnClickListener {
             RxBus.get().send(Utils.DASHBOARD)
+        }
+        tvPreview.setOnClickListener{
+            Utils.dataPrevQuestions = DbHelper.readDetailHistory(Utils.id_history)
+            RxBus.get().send(Utils.PREVIEW)
         }
     }
 
@@ -70,8 +78,8 @@ class CompleteFragment : RxBaseFragment() {
 
         Utils.count_correct = 0
         Utils.count_wrong = 0
+        Utils.status = ""
         Utils.page = 0
-        Utils.game_mode = ""
     }
 
     @SuppressLint("SetTextI18n")

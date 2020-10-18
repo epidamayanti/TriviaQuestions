@@ -36,7 +36,6 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.concurrent.schedule
 
-
 @Suppress("DEPRECATION")
 class PlayFragment : RxBaseFragment() {
 
@@ -55,7 +54,7 @@ class PlayFragment : RxBaseFragment() {
             }
         }
     }
-        //private lateinit var DbHelper : DbHelper
+    private lateinit var DbHelper : DbHelper
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -70,7 +69,7 @@ class PlayFragment : RxBaseFragment() {
         val view = inflater.inflate(R.layout.fragment_play, container, false)
         toolbar = view.findViewById(R.id.toolbar) as Toolbar
         loading = LoadingAlert.scoreDialog(this.context!!, this.activity!!)
-        //DbHelper = DbHelper(this.requireContext())
+        DbHelper = DbHelper(this.requireContext())
 
         initToolbar()
         // Inflate the layout for this fragment
@@ -88,8 +87,14 @@ class PlayFragment : RxBaseFragment() {
         (activity as AppCompatActivity).supportActionBar!!.title = "Play"
         (activity as AppCompatActivity).supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         toolbar?.setNavigationOnClickListener {
-            if(Utils.page == 0)
-                RxBus.get().send(Utils.CATEGORY)
+            if(Utils.page == 0) {
+                if(Utils.status == "random") {
+                    Utils.status = ""
+                    RxBus.get().send(Utils.DASHBOARD)
+                }
+                else
+                    RxBus.get().send(Utils.CATEGORY)
+            }
             else{
                 val builder = AlertDialog.Builder(this.context)
                 builder.setMessage("Please Complete The Question")
@@ -131,11 +136,9 @@ class PlayFragment : RxBaseFragment() {
 
     private fun onClickOpt(){
         Log.d("page", "" + Utils.page)
-        var idHistory = ""
 
         a_layout.setOnClickListener {
             checkAnswer("a")
-
         }
         b_layout.setOnClickListener {
             checkAnswer("b")
@@ -147,13 +150,23 @@ class PlayFragment : RxBaseFragment() {
         }
         d_layout.setOnClickListener {
             checkAnswer("d")
-
         }
-
-        Utils.id_history = idHistory
     }
 
     private fun checkAnswer(opt: String){
+
+        if(Utils.page == 0 && Utils.isLogin){
+            val size = DbHelper.readAllHistory().size
+            DbHelper.insertHistory(DataHistory("history_"+size, ""+Utils.username, ""+Utils.name_category, ""+Utils.game_mode, ""+getTime()))
+            Utils.id_history = "history_"+size
+        }
+        when(opt){
+            "a" -> { addHistory(btnOpt1.text.toString()) }
+            "b" -> { addHistory(btnOpt2.text.toString()) }
+            "c" -> { addHistory(btnOpt3.text.toString()) }
+            "d" -> { addHistory(btnOpt4.text.toString()) }
+        }
+
         when (Utils.true_answer) {
             btnOpt1.text.toString() -> {
                 a_layout.setBackgroundResource(R.drawable.right_gradient)
@@ -213,6 +226,7 @@ class PlayFragment : RxBaseFragment() {
             }
             btnOpt3.text.toString() -> {
                 c_layout.setBackgroundResource(R.drawable.right_gradient)
+
                 when (opt) {
                     "b" -> {
                         b_layout.setBackgroundResource(R.drawable.wrong_gradient)
@@ -268,7 +282,6 @@ class PlayFragment : RxBaseFragment() {
                 }
             }
         }
-
     }
 
     private fun randomOpt(answerOpt: MutableList<String>){
@@ -369,7 +382,20 @@ class PlayFragment : RxBaseFragment() {
         )
     }
 
-
+    private fun addHistory(answer: String){
+        DbHelper.insertDetailHistory(
+            DataDetailHistory(
+                "",
+                "" +Utils.id_history,
+                ""+Utils.dataQuestions[Utils.page].question,
+                ""+btnOpt1.text.toString(),
+                ""+btnOpt2.text.toString(),
+                ""+btnOpt3.text.toString(),
+                ""+btnOpt4.text.toString(),
+                ""+Utils.true_answer,
+                ""+answer)
+        )
+    }
 
     private fun providUpdateService(): Service {
         val clientBuilder: OkHttpClient.Builder = Utils.buildClient()
@@ -390,7 +416,7 @@ class PlayFragment : RxBaseFragment() {
 
     @SuppressLint("SimpleDateFormat")
     private fun getTime():String{
-        val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss")
+        val sdf = SimpleDateFormat("dd-MM-yyyy HH:mm:ss")
         return sdf.format(Date())
     }
 

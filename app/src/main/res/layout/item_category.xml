@@ -6,7 +6,7 @@
     android:layout_marginStart="@dimen/margin_10dp"
     android:layout_marginTop="2dp"
     android:layout_marginEnd="@dimen/margin_10dp"
-    android:background="@drawable/card_shadow"
+    android:background="@drawable/adapter_click"
     android:padding="3dp">
 
     <TextView

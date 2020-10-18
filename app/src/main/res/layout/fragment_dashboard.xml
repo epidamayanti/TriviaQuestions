@@ -28,7 +28,7 @@
             android:id="@+id/btnLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/rlHome"
+            android:layout_above="@+id/playRandom"
             android:layout_marginBottom="@dimen/circle_progress">
 
             <LinearLayout
@@ -73,7 +73,7 @@
                 android:layout_centerInParent="true"
                 android:gravity="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="@color/txt_color"
+                android:textColor="#2DC4CD"
                 android:textStyle="bold"
                 android:visibility="gone" />
         </RelativeLayout>
@@ -100,32 +100,33 @@
             android:background="@color/white"
             android:minHeight="?attr/actionBarSize"
             android:orientation="horizontal"
-
             android:weightSum="5">
 
             <ImageView
                 android:id="@+id/imgLeaderboard"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:padding="@dimen/margin_10dp"
+                android:background="@drawable/btn_click"
                 android:src="@drawable/leaderboard" />
 
             <ImageView
                 android:id="@+id/imgProfile"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:padding="@dimen/margin_10dp"
+                android:background="@drawable/btn_click"
                 app:srcCompat="@drawable/user" />
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1" />
 
             <ImageView
@@ -136,28 +137,29 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:padding="@dimen/margin_10dp"
+                android:background="@drawable/btn_click"
                 android:src="@drawable/ic_about" />
 
             <ImageView
                 android:id="@+id/imgLogout"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:padding="@dimen/margin_10dp"
+                android:background="@drawable/btn_click"
                 android:src="@drawable/logout" />
 
         </LinearLayout>
 
         <RelativeLayout
-            android:id="@+id/rlHome"
+            android:id="@+id/playRandom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="20dp"
-            android:layoutDirection="ltr"
-            android:background="@drawable/round_shadow1">
+            android:background="@drawable/play_click">
 
             <ImageView
                 android:id="@+id/imgQuiz"

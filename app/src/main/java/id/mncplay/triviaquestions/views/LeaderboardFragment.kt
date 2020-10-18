@@ -53,6 +53,12 @@ class LeaderboardFragment : RxBaseFragment(), SwipeRefreshLayout.OnRefreshListen
             lead_list.adapter = LeaderboardAdapter(this.context!!, items) {}
         }
 
+        if(Utils.isLogin){
+            tvName.text = Utils.username
+            tvScore.text = ""+Utils.score
+            tvRankPlayer.text = "" + Utils.rank
+        }
+
 
     }
 
@@ -67,9 +73,7 @@ class LeaderboardFragment : RxBaseFragment(), SwipeRefreshLayout.OnRefreshListen
         toolbar = view.findViewById(R.id.toolbar) as Toolbar
         DbHelper = DbHelper(this.requireContext())
         loading = LoadingAlert.progressDialog(this.requireContext(), this.requireActivity())
-        mSwipeRefreshLayout = view.findViewById(R.id.refresh);
-
-
+        mSwipeRefreshLayout = view.findViewById(R.id.refresh)
 
         initToolbar()
 
@@ -105,7 +109,10 @@ class LeaderboardFragment : RxBaseFragment(), SwipeRefreshLayout.OnRefreshListen
                         if (items[i].username == Utils.username) {
                             rank = i + 1
                             tvRankPlayer.text = "" + rank
-                            Utils.score = items[i].score.toInt()
+                            Utils.score = items[i].score
+                            Utils.rank = rank
+                            tvScore.text = ""+Utils.score
+
                         }
                         DbHelper.insertUser(
                             DataUser(
@@ -130,10 +137,6 @@ class LeaderboardFragment : RxBaseFragment(), SwipeRefreshLayout.OnRefreshListen
                                 }
                             }
                         }.setCancelable(false).show()
-                }
-                if(sharedPrefManager?.spLogin!!){
-                    tvName.text = Utils.name_player
-                    tvScore.text = ""+Utils.score
                 }
             }) { err ->
                 loading?.dismiss()

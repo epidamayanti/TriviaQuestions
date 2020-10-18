@@ -4,5 +4,5 @@ data class DataUser (
     val id : String,
     val username: String,
     val name: String,
-    val score: String
+    val score: Int
 )

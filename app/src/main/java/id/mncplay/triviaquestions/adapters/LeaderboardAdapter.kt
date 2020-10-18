@@ -30,7 +30,7 @@ class LeaderboardAdapter(private val context: Context, private val items: List<D
 
         @SuppressLint("SetTextI18n")
         fun bindItem(items: DataUser, listener: (DataUser) -> Unit) {
-            containerView.tvName.text = items.name
+            containerView.tvName.text = items.username
             containerView.tvScore.text = ""+items.score
             containerView.tvRank.text = ""+(position+1)
             containerView.setOnClickListener { listener(items) }

@@ -54,7 +54,10 @@
     <string name="hard_mode">Hard Mode</string>
     <string name="leaderboard">Leaderboard</string>
     <string name="msg_leaderboard">You can compare your score with other users of apps</string>
-    <string name="lets_play">Lets Play</string>
+    <string name="lets_play">Lets Play!</string>
+    <string name="game_play_mode">Game Play Mode</string>
+    <string name="play_random">Play game with random category and mode</string>
+    <string name="play_selected">Play game with selected category and mode</string>
 
     <!-- string category -->
     <string-array name="category_name">

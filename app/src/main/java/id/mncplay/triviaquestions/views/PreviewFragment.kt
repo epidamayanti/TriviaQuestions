@@ -1,6 +1,7 @@
 package id.mncplay.triviaquestions.views
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
@@ -26,16 +27,19 @@ import java.util.*
 import kotlin.concurrent.schedule
 
 
+@Suppress("DEPRECATION")
 class PreviewFragment : RxBaseFragment() {
 
     private var toolbar: Toolbar? = null
     private var loading: Dialog? = null
     private lateinit var DbHelper : DbHelper
 
-    private val dialogClickListener = DialogInterface.OnClickListener { dialog, which ->
+    private val dialogPrev = DialogInterface.OnClickListener { dialog, which ->
         when (which) {
             DialogInterface.BUTTON_POSITIVE -> {
                 dialog.dismiss()
+                Utils.page = 0
+                RxBus.get().send(Utils.HISTORY)
             }
 
             DialogInterface.BUTTON_NEGATIVE -> {
@@ -44,6 +48,7 @@ class PreviewFragment : RxBaseFragment() {
             }
         }
     }
+
     private var trueAnswer =""
     private var answer =""
 
@@ -57,7 +62,6 @@ class PreviewFragment : RxBaseFragment() {
         loading = LoadingAlert.scoreDialog(this.context!!, this.activity!!)
         DbHelper = DbHelper(this.requireContext())
 
-
         initToolbar()
         // Inflate the layout for this fragment
         return view
@@ -69,38 +73,54 @@ class PreviewFragment : RxBaseFragment() {
         (activity as AppCompatActivity).supportActionBar!!.title = "Preview"
         (activity as AppCompatActivity).supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         toolbar?.setNavigationOnClickListener {
-            RxBus.get().send(Utils.DASHBOARD)
+            val builder = AlertDialog.Builder(requireContext())
+            builder.setMessage("Exit the preview ? ")
+                .setPositiveButton("YES", dialogPrev)
+                .setNegativeButton("NO", dialogPrev)
+                .setCancelable(false).show()
         }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        RxBus.get().send(Utils.HISTORY)
         return super.onOptionsItemSelected(item)
     }
 
 
     override fun onResume() {
         super.onResume()
-
         initData()
-
         preview_next.setOnClickListener {
             Utils.page++
+            preview_next.isEnabled = false
             changeQuestion(Utils.page)
         }
 
         preview_prev.setOnClickListener {
-            Utils.page++
+            Utils.page--
+            preview_prev.isEnabled = false
             changeQuestion(Utils.page)
         }
 
         finish.setOnClickListener {
+            Utils.page = 0
             RxBus.get().send(Utils.HISTORY)
         }
 
     }
     @SuppressLint("SetTextI18n")
     private fun initData(){
+
+        if(Utils.page == 0){
+            preview_prev.visibility = View.GONE
+            finish.visibility = View.GONE
+        }
+        else if(Utils.page == Utils.dataPrevQuestions.size-1 ){
+            preview_next.visibility = View.INVISIBLE
+            finish.visibility = View.VISIBLE
+            preview_prev.visibility = View.VISIBLE
+        }
+
+        Utils.dataPrevQuestions = DbHelper.readDetailHistory(Utils.id_history)
 
         tvCategory.text = ""+Utils.name_category+" - "+Utils.game_mode
         tvIndex.text = ""+(Utils.page+1)
@@ -144,24 +164,11 @@ class PreviewFragment : RxBaseFragment() {
     }
 
     private fun changeQuestion(page: Int){
-        if(page == 10){
-            preview_next.visibility = View.INVISIBLE
-            finish.visibility = View.VISIBLE
-            preview_prev.visibility = View.VISIBLE
-
-        }
-        else if(page == 0){
-            preview_prev.visibility = View.GONE
-            finish.visibility = View.GONE
-
-        }
-        else{
-            finish.visibility = View.GONE
-            preview_prev.visibility = View.VISIBLE
-            Timer("Waiting..", false).schedule(100) {
-                RxBus.get().send(Utils.PREVIEW)
-            }
-        }
+        finish.visibility = View.GONE
+        preview_prev.visibility = View.VISIBLE
+       /// Timer("Waiting..", false).schedule(100) {
+            RxBus.get().send(Utils.PREVIEW)
+        //}
     }
 
 

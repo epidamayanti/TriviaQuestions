@@ -13,6 +13,11 @@ interface Service {
                 @Query("type")type:String
     ): Observable<ResponseData>
 
+    @POST(Utils.DATA_ENDPOINT)
+    fun getDataRandom(@Query("amount")amount:Int,
+                      @Query("type")type:String
+    ): Observable<ResponseData>
+
     @POST(Utils.LOGIN_ENDPOINT)
     fun login(
         @Body login: LoginModel

@@ -235,7 +235,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_10dp"
-                android:background="@drawable/answer_bg"
+                android:background="@drawable/btn_click"
                 android:gravity="center"
                 android:paddingTop="@dimen/margin_dp"
                 android:paddingBottom="@dimen/margin_dp"
@@ -244,12 +244,24 @@
                 android:textColor="@color/txt_color"
                 android:textStyle="bold" />
 
+            <TextView
+                android:id="@+id/tvPreview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/btn_click"
+                android:gravity="center"
+                android:paddingTop="@dimen/margin_dp"
+                android:paddingBottom="@dimen/margin_dp"
+                android:text="Preview"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@color/txt_color"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tvLeaderBoard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/answer_bg"
+                android:background="@drawable/btn_click"
                 android:gravity="center"
                 android:paddingTop="@dimen/margin_dp"
                 android:paddingBottom="@dimen/margin_dp"
@@ -263,7 +275,7 @@
                 android:id="@+id/tvHome"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/answer_bg"
+                android:background="@drawable/btn_click"
                 android:gravity="center"
                 android:paddingTop="@dimen/margin_dp"
                 android:paddingBottom="@dimen/margin_dp"
